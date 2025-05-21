@@ -248,12 +248,12 @@ export class CompanyComponent implements OnInit, AfterViewInit {
   }
 
   downloadCSV(): void {
-    const url = `http://${environment.apiUrl}/download/${this.companySymbol}`;
+    const url = `${environment.apiUrl}/download/${this.companySymbol}`;
     window.open(url, '_blank');
   }
 
   loadPredictionImages(): void {
-    const baseUrl = 'http://${environment.apiUrl}/predictions';
+    const baseUrl = '${environment.apiUrl}/predictions';
     const symbol = this.companySymbol;
     const models = ['ANN', 'LSTM', 'RANDOMFOREST', 'SVR'];
 
