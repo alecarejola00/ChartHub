@@ -52,7 +52,7 @@ export class DataService {
     return this.http.post(this.apiUrl, { name });
   }
   getStockData(symbol: string): Observable<any> {
-    return this.http.get<any[]>(`http://localhost:3000/files/${symbol}`);
+    return this.http.get<any[]>(`http://localhost:10000/files/${symbol}`);
   }
   getAllCompanies(): Observable<{ symbol: string; name: string; desc: string }[]> {
     return this.http.get('assets/companyList.csv', { responseType: 'text' }).pipe(
