@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class DataService {
-  private apiUrl = 'http://localhost:3000/files'; // Your Node.js backend URL
+  private apiUrl = 'http://localhost:10000/files'; // Your Node.js backend URL
   private csvPath = 'assets/companyList.csv';
 
   constructor(private http: HttpClient, private papa: Papa) {}
