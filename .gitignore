@@ -1,0 +1,14 @@
+# Angular
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.angular/
+
+# Node.js
+/backend/node_modules/
+
+# General
+.env
+.DS_Store
+*.log
+*.bak
+*.tmp
