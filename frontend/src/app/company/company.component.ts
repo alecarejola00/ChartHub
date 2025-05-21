@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../services/data.service';
 import { createChart, IChartApi, ColorType, CandlestickSeries, UTCTimestamp, CrosshairMode } from 'lightweight-charts';
 import { SelectedCompanyService } from '../services/selected-company.services';
+import { environment } from '../environments/environment';
 
 interface PredictionImage {
   src: string;
@@ -247,12 +248,12 @@ export class CompanyComponent implements OnInit, AfterViewInit {
   }
 
   downloadCSV(): void {
-    const url = `http://localhost:10000/download/${this.companySymbol}`;
+    const url = `http://${environment.apiUrl}/download/${this.companySymbol}`;
     window.open(url, '_blank');
   }
 
   loadPredictionImages(): void {
-    const baseUrl = 'http://localhost:10000/predictions';
+    const baseUrl = 'http://${environment.apiUrl}/predictions';
     const symbol = this.companySymbol;
     const models = ['ANN', 'LSTM', 'RANDOMFOREST', 'SVR'];
 

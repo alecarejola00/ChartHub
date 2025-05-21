@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Papa } from 'ngx-papaparse';
 import { map } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  private apiUrl = 'http://localhost:10000/files'; // Your Node.js backend URL
+  private apiUrl = '${environment.apiUrl}/files'; // Your Node.js backend URL
   private csvPath = 'assets/companyList.csv';
 
   constructor(private http: HttpClient, private papa: Papa) {}
@@ -52,7 +53,7 @@ export class DataService {
     return this.http.post(this.apiUrl, { name });
   }
   getStockData(symbol: string): Observable<any> {
-    return this.http.get<any[]>(`http://localhost:10000/files/${symbol}`);
+    return this.http.get<any[]>(`${environment.apiUrl}/files/${symbol}`);
   }
   getAllCompanies(): Observable<{ symbol: string; name: string; desc: string }[]> {
     return this.http.get('assets/companyList.csv', { responseType: 'text' }).pipe(
