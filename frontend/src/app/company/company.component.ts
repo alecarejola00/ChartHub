@@ -253,7 +253,7 @@ export class CompanyComponent implements OnInit, AfterViewInit {
   }
 
   loadPredictionImages(): void {
-    const baseUrl = '${environment.apiUrl}/predictions';
+    const baseUrl = `${environment.apiUrl}/predictions`;
     const symbol = this.companySymbol;
     const models = ['ANN', 'LSTM', 'RANDOMFOREST', 'SVR'];
 
