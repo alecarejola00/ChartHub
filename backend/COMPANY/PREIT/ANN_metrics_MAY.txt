@@ -1,0 +1,4 @@
+Evaluation for May 1–16, 2025
+RMSE: 0.0940
+MAE:  0.0872
+R²:   -5.4720

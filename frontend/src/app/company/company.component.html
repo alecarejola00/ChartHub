@@ -1,0 +1,97 @@
+<br>
+<div class="company-detail">
+  <h1 class="center-text">{{ companyName }} </h1>
+  <h3 class="center-text">{{ companySymbol }} </h3>
+</div>
+
+<div #chartContainer style="position: relative; width: 100%; height: 400px;">
+  <div #tooltip class="custom-tooltip" style="position: absolute; display: none; background-color: white; border: 1px solid gray; padding: 8px; font-size: 12px; z-index: 1000;"></div>
+</div>
+<div
+  *ngIf="crosshairData.visible"
+  class="ohlc-info"
+  [ngStyle]="{
+    top: (crosshairData.y ?? 0) + 'px',
+    left: (crosshairData.x ?? 0) + 'px'
+  }"
+>
+  <strong>{{ crosshairData.time }}</strong><br />
+  Open: ₱{{ crosshairData.open }}<br />
+  High: ₱{{ crosshairData.high }}<br />
+  Low: ₱{{ crosshairData.low }}<br />
+  Close: ₱{{ crosshairData.close }}
+</div>
+<br><br>
+<div class="toggle-wrapper">
+  <div class="toggle-buttons">
+    <button
+      mat-raised-button
+      *ngFor="let range of timeRanges"
+      [ngClass]="{ 'selected-toggle': selectedRange === range.value }"
+      (click)="setTimeRange(range.value)">{{ range.label }}
+    </button>
+  </div>
+</div>
+
+
+<div class="container">
+  <br />
+
+<!-- Section 1: Download CSV -->
+<div class="button-container center-text">
+  <button mat-raised-button color="primary" (click)="downloadCSV()">
+    Download CSV for {{ companyName }}
+  </button>
+</div>
+
+<!-- Section 2: Main Prediction Card with Swappable Thumbnails -->
+<div class="prediction-wrapper">
+  <!-- Main Card -->
+  <div class="main-card">
+    <span matTooltipPosition="above" matTooltip="This model is trained to predict closing price starting January 1, 2020 up to April 30, 2025">
+      <img [src]="selectedImage!.src" [alt]="selectedImage!.title" />      
+    </span>
+    <span matTooltip="Type of Machine Learning Model" matTooltipPosition="above">
+      <h2 class="center-text">{{ selectedImage?.title }}</h2>
+      </span>
+    <div class="center-text"></div>
+    
+    <div class="metrics-container center-text" *ngIf="selectedImage">
+      <div class="metric-item">
+        <span matTooltip="Root Mean Square Error - measures the average error magnitude. Lower value means better." matTooltipPosition="above">
+          RMSE: {{ selectedImage.rmse }}          
+        </span> 
+        <span class="metric-info-icon" matTooltip="{{rmseLabel}}" matTooltipClass="multiline-tooltip">ℹ️</span>
+      </div>
+      <div class="metric-item">
+        <span matTooltip="Mean Absolute Error - average absolute difference between predicted and actual. Lower value means better." matTooltipPosition="above">
+          MAE: {{ selectedImage.mae }}
+        </span>
+        <span class="metric-info-icon" matTooltip="{{ maeLabel }}" matTooltipClass="multiline-tooltip">ℹ️</span>
+      </div>
+      <div class="metric-item">
+        <span matTooltip="R squared - Closer to 1 is better. Negative values means model is not fit." matTooltipPosition="above">
+          R²: {{ selectedImage.r2 }}
+        </span>
+        <span
+          [matTooltip]="R2Label"
+          matTooltipClass="multiline-tooltip">
+          ℹ️
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thumbnail Cards -->
+  <div class="thumbnail-cards">
+    <div 
+      class="thumb-card" 
+      *ngFor="let image of filteredPredictionImages" 
+      (click)="swapImage(image)"
+    >
+      <img [src]="image.src" [alt]="image.title" />
+      <h3>{{ image.title }}</h3>
+    </div>
+  </div>
+</div>
+

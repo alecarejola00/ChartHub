@@ -1,0 +1,17 @@
+.main-container {
+  display: flex;
+  height: calc(100vh - 64px); // adjust based on header height
+}
+
+.home-pane {
+  width: 20%;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.company-pane {
+  width: 80%;
+  overflow-y: auto;
+  padding: 1rem;
+}

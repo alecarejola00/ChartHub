@@ -1,0 +1,4 @@
+Evaluation for May 1–16, 2025
+RMSE: 4.8810
+MAE:  4.8810
+R²:   nan

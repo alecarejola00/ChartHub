@@ -1,0 +1,39 @@
+<div *ngIf="loading" class="spinner-wrapper">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="!loading">
+  <div class="search-bar">
+    <mat-form-field appearance="outline" class="search-field">
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search companies..."
+        aria-label="Search companies"
+        matInput
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="resetPagination()" />
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="pagedCompanies.length > 0">
+    <mat-card *ngFor="let company of pagedCompanies" class="company-card" [ngClass]="{ 'highlighted': company.symbol === selectedCompanySymbol }" (click)="selectCompany(company.symbol)" style="cursor: pointer;">
+    <div class="card-content">
+        <h3>{{ company.name }}</h3>
+        <p>{{ company.symbol }} — {{ company.desc }}</p>
+    </div>
+    </mat-card>
+  </div>
+
+  <div *ngIf="pagedCompanies.length === 0">
+    <p>No companies match your search.</p>
+  </div>
+  <br>
+  <div class="paginator-container">
+    <mat-paginator
+      [length]="filteredCompanies().length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 20, 50, 100, 150, 200, 297]"
+      (page)="onPageChange($event)">
+    </mat-paginator>
+</div>

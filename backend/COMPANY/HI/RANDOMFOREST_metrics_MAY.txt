@@ -1,0 +1,3 @@
+May Forecast RMSE (1-16): 0.0470
+May Forecast MAE (1-16):  0.0378
+May Forecast R² (1-16):   -0.3323

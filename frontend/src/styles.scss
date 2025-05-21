@@ -1,0 +1,20 @@
+/* You can add global styles to this file, and also import other style files */
+
+@use '@angular/material' as mat;
+
+$azure-primary: mat.define-palette(mat.$light-blue-palette, 500);
+$azure-accent: mat.define-palette(mat.$cyan-palette, A200, A100, A400);
+
+$azure-theme: mat.define-light-theme((
+  color: (
+    primary: $azure-primary,
+    accent: $azure-accent,
+  )
+));
+
+@include mat.core();
+@include mat.all-component-themes($azure-theme);
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

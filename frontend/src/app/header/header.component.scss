@@ -1,0 +1,17 @@
+.app-banner {
+  background-color: var(--primary-color, #3f51b5);
+  color: white; 
+  text-align: center;
+  padding: 20px 0;
+
+  h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0;
+  }
+}
+
+.logo-link {
+  text-decoration: none;
+  color: inherit;
+}
