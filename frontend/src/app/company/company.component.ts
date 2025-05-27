@@ -395,34 +395,34 @@ export class CompanyComponent implements OnInit, AfterViewInit {
 
     const ratio = error / averagePrice;
 
-    if (ratio < 0.05) return 'Excellent';
-    if (ratio < 0.1) return 'Good';
-    if (ratio < 0.2) return 'Fair';
-    return 'Poor';
+    if (ratio < 0.05) return 'Excellent'; // Error less than 5% of avg price — very accurate
+    if (ratio < 0.1) return 'Good';       // Less than 10% error — still good
+    if (ratio < 0.2) return 'Fair';       // Up to 20% error — acceptable with caution
+    return 'Poor';                        // More than 20% error — probably unreliable
   }
 
   interpretR2(r2: number): string {
     if (isNaN(r2)) return 'Unknown';
 
-    if (r2 >= 0.9) return 'Excellent';
-    if (r2 >= 0.75) return 'Good';
-    if (r2 >= 0.5) return 'Fair';
-    return 'Poor';
+    if (r2 >= 0.9) return 'Excellent';  // Score >= 90%
+    if (r2 >= 0.75) return 'Good';      // Score >= 75% < 90%
+    if (r2 >= 0.5) return 'Fair';       // Score >= 50% < 75%
+    return 'Poor';                      // Socre < 50%
   }
-  getRmseDetails(label: string): string {
-    switch (label) {
-      case 'Excellent':
-        return 'The model predicts prices very accurately with minimal errors.';
-      case 'Good':
-        return 'The model predictions are generally accurate with some minor errors.';
-      case 'Fair':
-        return 'The model predictions have moderate errors; use with some caution.';
-      case 'Poor':
-        return 'The model predictions have large errors and may be unreliable.';
-      default:
-        return '';
-    }
+getRmseDetails(label: string): string {
+  switch (label) {
+    case 'Excellent':
+      return 'The model predicts prices very accurately with minimal errors.';
+    case 'Good':
+      return 'The model predictions are generally accurate with some minor errors.';
+    case 'Fair':
+      return 'The model predictions have moderate errors; use with some caution.';
+    case 'Poor':
+      return 'The model predictions have large errors and may be unreliable.';
+    default:
+      return '';
   }
+}
 
 getR2Details(label: string): string {
   switch (label) {
