@@ -67,6 +67,9 @@
         <div class="metric-label">
           {{ rmseLabel }}
         </div>
+        <div class="metric-details" *ngIf="rmseLabel">
+          {{ getRmseDetails(rmseLabel) }}
+        </div>
         <div class="metric-description">
           Root Mean Square Error – measures average error magnitude. Lower is better.
         </div>
@@ -80,6 +83,9 @@
         <div class="metric-label">
           {{ maeLabel }}
         </div>
+        <div class="metric-details" *ngIf="maeLabel">
+          {{ getRmseDetails(maeLabel) }}
+        </div>
         <div class="metric-description">
           Mean Absolute Error – average absolute difference between predicted and actual values. Lower is better.
         </div>
@@ -92,6 +98,9 @@
         </div>
         <div class="metric-label">
           {{ r2Label }}
+        </div>
+        <div class="metric-details" *ngIf="r2Label">
+          {{ getR2Details(r2Label) }}
         </div>
         <div class="metric-description">
           R-squared – how well the model explains the variance in data. Closer to 1 is better; negative means the model isn't fit.

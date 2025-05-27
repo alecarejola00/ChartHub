@@ -409,4 +409,33 @@ export class CompanyComponent implements OnInit, AfterViewInit {
     if (r2 >= 0.5) return 'Fair';
     return 'Poor';
   }
+  getRmseDetails(label: string): string {
+    switch (label) {
+      case 'Excellent':
+        return 'The model predicts prices very accurately with minimal errors.';
+      case 'Good':
+        return 'The model predictions are generally accurate with some minor errors.';
+      case 'Fair':
+        return 'The model predictions have moderate errors; use with some caution.';
+      case 'Poor':
+        return 'The model predictions have large errors and may be unreliable.';
+      default:
+        return '';
+    }
+  }
+
+getR2Details(label: string): string {
+  switch (label) {
+    case 'Excellent':
+      return 'The model explains most of the variability in the data.';
+    case 'Good':
+      return 'The model explains a good amount of the variability.';
+    case 'Fair':
+      return 'The model explains some of the variability but not very well.';
+    case 'Poor':
+      return 'The model explains little of the variability; predictions may be poor.';
+    default:
+      return '';
+    }
+  }
 }
