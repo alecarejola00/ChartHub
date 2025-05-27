@@ -1,6 +1,11 @@
+<button class="toggle-button" (click)="toggleHomePane()">☰ Menu</button>
+
 <div class="main-container">
-  <div class="home-pane">
-    <app-home></app-home>
+  <div
+    class="home-pane"
+    [class.hidden-on-mobile]="!isHomePaneVisible"
+  >
+    <app-home (companySelected)="handleCompanySelected()"></app-home>
   </div>
   <div class="company-pane">
     <router-outlet></router-outlet>

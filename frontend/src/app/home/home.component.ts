@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { DataService } from '../services/data.service';
 import { SelectedCompanyService } from '../services/selected-company.services';
@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   @ViewChild('auto') auto!: MatAutocomplete;
+  @Output() companySelected = new EventEmitter<void>();
 
   companies: any[] = [];
   pagedCompanies: any[] = [];
@@ -83,11 +84,13 @@ export class HomeComponent implements OnInit {
   selectCompany(symbol: string): void {
     this.selectedCompanySymbol = symbol;
 
+    this.companySelected.emit();
+
     // Optional delay to show the highlight effect
     setTimeout(() => {
       this.selectedCompanyService.setSelectedSymbol(symbol);
       this.router.navigate(['/company', symbol]);
-    }, 200); // 200ms delay
+    }, 50);
   }
 
   get totalPages(): number {

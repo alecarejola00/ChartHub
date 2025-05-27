@@ -6,5 +6,14 @@ import { Component } from '@angular/core';
   styleUrl: './main-page.component.scss'
 })
 export class MainPageComponent {
+  isHomePaneVisible = false;
 
+  toggleHomePane() {
+    this.isHomePaneVisible = !this.isHomePaneVisible;
+  }
+  handleCompanySelected() {
+    if (window.innerWidth <= 768) {
+      this.isHomePaneVisible = false;
+    }
+  }
 }
