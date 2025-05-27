@@ -28,9 +28,11 @@ export class CompanyComponent implements OnInit, AfterViewInit {
   stockData: any[] = [];
   rmseLabel: string = '';
   maeLabel: string = '';
+  r2Label?: string;
 
   predictionImages: PredictionImage[] = [];
   selectedImage: PredictionImage | null = null;
+  loadingChart: boolean = false;
 
   crosshairData: {
     time?: string;
@@ -52,11 +54,6 @@ export class CompanyComponent implements OnInit, AfterViewInit {
   ];
   selectedRange: string = 'all';
 
-  R2Label: string = `Excellent: R² ≥ 0.9
-  Good: 0.75 ≤ R² < 0.9
-  Fair: 0.5 ≤ R² < 0.75
-  Poor: R² < 0.5`;
-
   constructor(
     private route: ActivatedRoute,
     private dataService: DataService,
@@ -65,7 +62,7 @@ export class CompanyComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       const symbol = params.get('symbol');
       if (symbol) {
         this.companySymbol = symbol;
@@ -73,7 +70,7 @@ export class CompanyComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.selectedCompanyService.selectedSymbol$.subscribe(symbol => {
+    this.selectedCompanyService.selectedSymbol$.subscribe((symbol) => {
       if (symbol && symbol !== this.companySymbol) {
         this.companySymbol = symbol;
         this.loadCompanyData();
@@ -82,13 +79,14 @@ export class CompanyComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Placeholder for after view init logic if needed
+    // Optional: Post-view initialization
+    this.loadCompanyData();
   }
 
   loadCompanyData(): void {
-    this.loadPredictionImages();
+    this.loadingChart = true;
 
-    this.dataService.getCompanyBySymbol(this.companySymbol).subscribe(company => {
+    this.dataService.getCompanyBySymbol(this.companySymbol).subscribe((company) => {
       this.companyName = company?.name ?? '';
     });
 
@@ -103,9 +101,9 @@ export class CompanyComponent implements OnInit, AfterViewInit {
           volume: d.volume,
         }));
 
-        mapped.sort((a: { time: number }, b: { time: number }) => a.time - b.time);
+        mapped.sort((a: { time: number; }, b: { time: number; }) => a.time - b.time);
 
-        const uniqueData: typeof mapped = [];
+        const uniqueData = [];
         let lastTime: number | null = null;
         for (const item of mapped) {
           if (item.time !== lastTime) {
@@ -116,16 +114,18 @@ export class CompanyComponent implements OnInit, AfterViewInit {
 
         this.stockData = uniqueData;
 
-        this.loadPredictionImages();
-
         setTimeout(() => {
           if (this.chartContainer) {
             this.initializeChart();
           }
+          this.loadPredictionImages();
+          this.loadingChart = false;
         }, 0);
       },
       (error) => {
         console.error('Error fetching stock data:', error);
+        this.loadPredictionImages();
+        this.loadingChart = false;
       }
     );
   }
@@ -176,7 +176,7 @@ export class CompanyComponent implements OnInit, AfterViewInit {
     const container = this.chartContainer.nativeElement;
     this.chart.resize(container.clientWidth, container.clientHeight);
 
-    const candlestickSeries = this.chart.addSeries(CandlestickSeries,{
+    const candlestickSeries = this.chart.addSeries(CandlestickSeries, {
       upColor: '#26a69a',
       downColor: '#ef5350',
       borderVisible: false,
@@ -193,12 +193,7 @@ export class CompanyComponent implements OnInit, AfterViewInit {
     this.chart.timeScale().fitContent();
 
     this.chart.subscribeCrosshairMove((param) => {
-      if (
-        param &&
-        param.time &&
-        param.seriesData &&
-        param.seriesData.has(candlestickSeries)
-      ) {
+      if (param && param.time && param.seriesData && param.seriesData.has(candlestickSeries)) {
         const data = param.seriesData.get(candlestickSeries) as any;
         this.crosshairData = {
           time: new Date((param.time as number) * 1000).toLocaleDateString(),
@@ -259,14 +254,14 @@ export class CompanyComponent implements OnInit, AfterViewInit {
 
     this.predictionImages = [];
 
-    models.forEach(model => {
+    models.forEach((model, i) => {
       const image: PredictionImage = {
         src: `${baseUrl}/${symbol}/${model}_prediction_plot.png`,
         title: '',
         description: 'Loading metrics...',
         rmse: 'Loading...',
         mae: 'Loading...',
-        r2: 'Loading...'
+        r2: 'Loading...',
       };
 
       switch (model) {
@@ -290,22 +285,30 @@ export class CompanyComponent implements OnInit, AfterViewInit {
 
       this.http.get(metricsUrl, { responseType: 'text' }).subscribe({
         next: (metricsText) => {
-          const index = this.predictionImages.findIndex(img => img.src.includes(`${model}_prediction_plot.png`));
+          const index = this.predictionImages.findIndex(img =>
+            img.src.includes(`${model}_prediction_plot.png`)
+          );
+
           if (index !== -1) {
             const metrics = this.formatMetrics(metricsText);
             const averagePrice = this.getAveragePrice();
 
             const rmseNum = parseFloat(metrics.rmse);
             const maeNum = parseFloat(metrics.mae);
+            const r2Num = parseFloat(metrics.r2);
 
-            const rmseLabel = isNaN(rmseNum) ? 'Unknown' : this.interpretError(rmseNum, averagePrice);
-            const maeLabel = isNaN(maeNum) ? 'Unknown' : this.interpretError(maeNum, averagePrice);
-
-            this.rmseLabel = rmseLabel;
-            this.maeLabel = maeLabel;
+            const rmseLabel = isNaN(rmseNum)
+              ? 'Unknown'
+              : this.interpretError(rmseNum, averagePrice);
+            const maeLabel = isNaN(maeNum)
+              ? 'Unknown'
+              : this.interpretError(maeNum, averagePrice);
+            const r2Label = isNaN(r2Num)
+              ? 'Unknown'
+              : this.interpretR2(r2Num);
 
             this.predictionImages[index].rmse = metrics.rmse;
-            this.predictionImages[index].mae =metrics.mae;
+            this.predictionImages[index].mae = metrics.mae;
             this.predictionImages[index].r2 = metrics.r2;
 
             if (this.selectedImage?.src === this.predictionImages[index].src) {
@@ -313,21 +316,32 @@ export class CompanyComponent implements OnInit, AfterViewInit {
               this.selectedImage.mae = metrics.mae;
               this.selectedImage.r2 = metrics.r2;
             }
+
+            // Update summary only for selected image
+            if (index === 0 && !this.selectedImage) {
+              this.selectedImage = this.predictionImages[0];
+
+              // Only update labels if metrics are successfully parsed
+              if (!isNaN(rmseNum) && !isNaN(maeNum) && !isNaN(r2Num)) {
+                this.rmseLabel = rmseLabel;
+                this.maeLabel = maeLabel;
+                this.r2Label = r2Label;
+              }
+            }
           }
         },
         error: () => {
-          const index = this.predictionImages.findIndex(img => img.src.includes(`${model}_prediction_plot.png`));
+          const index = this.predictionImages.findIndex(img =>
+            img.src.includes(`${model}_prediction_plot.png`)
+          );
           if (index !== -1) {
             this.predictionImages[index].rmse = 'N/A';
             this.predictionImages[index].mae = 'N/A';
             this.predictionImages[index].r2 = 'N/A';
           }
-        }
+        },
       });
     });
-
-    // Set first image selected by default
-    this.selectedImage = this.predictionImages[0];
   }
 
   get filteredPredictionImages(): PredictionImage[] {
@@ -339,11 +353,26 @@ export class CompanyComponent implements OnInit, AfterViewInit {
   swapImage(image: PredictionImage): void {
     if (this.selectedImage && image.src !== this.selectedImage.src) {
       this.selectedImage = image;
+
+      const matchedImage = this.predictionImages.find(img => img.src === image.src);
+      if (matchedImage) {
+        this.selectedImage.rmse = matchedImage.rmse;
+        this.selectedImage.mae = matchedImage.mae;
+        this.selectedImage.r2 = matchedImage.r2;
+
+        const rmseNum = parseFloat(matchedImage.rmse);
+        const maeNum = parseFloat(matchedImage.mae);
+        const r2Num = parseFloat(matchedImage.r2);
+        const avg = this.getAveragePrice();
+
+        this.rmseLabel = isNaN(rmseNum) ? 'Unknown' : this.interpretError(rmseNum, avg);
+        this.maeLabel = isNaN(maeNum) ? 'Unknown' : this.interpretError(maeNum, avg);
+        this.r2Label = isNaN(r2Num) ? 'Unknown' : this.interpretR2(r2Num);
+      }
     }
   }
 
   formatMetrics(text: string): { rmse: string; mae: string; r2: string } {
-    // Match all numbers (with optional leading minus sign and decimals) in order of appearance
     const numbers = text.match(/-?\d+(\.\d+)?/g);
 
     return {
@@ -352,16 +381,16 @@ export class CompanyComponent implements OnInit, AfterViewInit {
       r2: numbers && numbers[2] ? numbers[2] : 'N/A',
     };
   }
+
   getAveragePrice(): number {
     if (!this.stockData || this.stockData.length === 0) return 0;
-
     const sum = this.stockData.reduce((acc, curr) => acc + curr.close, 0);
     return sum / this.stockData.length;
   }
 
   interpretError(error: number, averagePrice: number): string {
     if (!averagePrice || averagePrice <= 0 || isNaN(averagePrice)) {
-      return 'Unknown'; // Can't calculate ratio with invalid averagePrice
+      return 'Unknown';
     }
 
     const ratio = error / averagePrice;
@@ -369,6 +398,15 @@ export class CompanyComponent implements OnInit, AfterViewInit {
     if (ratio < 0.05) return 'Excellent';
     if (ratio < 0.1) return 'Good';
     if (ratio < 0.2) return 'Fair';
+    return 'Poor';
+  }
+
+  interpretR2(r2: number): string {
+    if (isNaN(r2)) return 'Unknown';
+
+    if (r2 >= 0.9) return 'Excellent';
+    if (r2 >= 0.75) return 'Good';
+    if (r2 >= 0.5) return 'Fair';
     return 'Poor';
   }
 }

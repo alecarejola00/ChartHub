@@ -3,8 +3,11 @@
   <h1 class="center-text">{{ companyName }} </h1>
   <h3 class="center-text">{{ companySymbol }} </h3>
 </div>
-
-<div #chartContainer style="position: relative; width: 100%; height: 400px;">
+<div style="position: relative; width: 100%; height: 400px;">
+  <div *ngIf="loadingChart" class="spinner-container" style="position: absolute; inset: 0; display:flex; justify-content:center; align-items:center; background: rgba(255,255,255,0.7); z-index: 10;">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+  <div #chartContainer style="width: 100%; height: 100%;"></div>
   <div #tooltip class="custom-tooltip" style="position: absolute; display: none; background-color: white; border: 1px solid gray; padding: 8px; font-size: 12px; z-index: 1000;"></div>
 </div>
 <div
@@ -36,7 +39,6 @@
 
 <div class="container">
   <br />
-
 <!-- Section 1: Download CSV -->
 <div class="button-container center-text">
   <button mat-raised-button color="primary" (click)="downloadCSV()">
@@ -57,27 +59,43 @@
     <div class="center-text"></div>
     
     <div class="metrics-container center-text" *ngIf="selectedImage">
+      <!-- RMSE -->
       <div class="metric-item">
-        <span matTooltip="Root Mean Square Error - measures the average error magnitude. Lower value means better." matTooltipPosition="above">
-          RMSE: {{ selectedImage.rmse }}          
-        </span> 
-        <span class="metric-info-icon" matTooltip="{{rmseLabel}}" matTooltipClass="multiline-tooltip">ℹ️</span>
+        <div class="metric-value">
+          <strong>RMSE:</strong> {{ selectedImage.rmse }}
+        </div>
+        <div class="metric-label">
+          {{ rmseLabel }}
+        </div>
+        <div class="metric-description">
+          Root Mean Square Error – measures average error magnitude. Lower is better.
+        </div>
       </div>
+
+      <!-- MAE -->
       <div class="metric-item">
-        <span matTooltip="Mean Absolute Error - average absolute difference between predicted and actual. Lower value means better." matTooltipPosition="above">
-          MAE: {{ selectedImage.mae }}
-        </span>
-        <span class="metric-info-icon" matTooltip="{{ maeLabel }}" matTooltipClass="multiline-tooltip">ℹ️</span>
+        <div class="metric-value">
+          <strong>MAE:</strong> {{ selectedImage.mae }}
+        </div>
+        <div class="metric-label">
+          {{ maeLabel }}
+        </div>
+        <div class="metric-description">
+          Mean Absolute Error – average absolute difference between predicted and actual values. Lower is better.
+        </div>
       </div>
+
+      <!-- R² -->
       <div class="metric-item">
-        <span matTooltip="R squared - Closer to 1 is better. Negative values means model is not fit." matTooltipPosition="above">
-          R²: {{ selectedImage.r2 }}
-        </span>
-        <span
-          [matTooltip]="R2Label"
-          matTooltipClass="multiline-tooltip">
-          ℹ️
-        </span>
+        <div class="metric-value">
+          <strong>R²:</strong> {{ selectedImage.r2 }}
+        </div>
+        <div class="metric-label">
+          {{ r2Label }}
+        </div>
+        <div class="metric-description">
+          R-squared – how well the model explains the variance in data. Closer to 1 is better; negative means the model isn't fit.
+        </div>
       </div>
     </div>
   </div>
