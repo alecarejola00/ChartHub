@@ -15,3 +15,12 @@ To gauge the accuracy of each prediction models for every company, the metrics a
 1. Root Mean Square Error
 2. Mean Absolute Error
 3. R²
+
+
+To run backend:
+Build command: npm install
+Run command: node server.js
+
+To run frontend:
+Build command: npm install
+Run command: npm run build
