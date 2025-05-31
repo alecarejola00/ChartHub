@@ -17,10 +17,10 @@ To gauge the accuracy of each prediction models for every company, the metrics a
 3. R²
 
 
-To run backend:
-Build command: npm install
-Run command: node server.js
+To run backend:<br>
+Build command: npm install<br>
+Run command: node server.js<br>
 
-To run frontend:
-Build command: npm install
-Run command: npm run build
+To run frontend:<br>
+Build command: npm install<br>
+Run command: npm run build<br>
