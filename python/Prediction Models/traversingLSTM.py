@@ -117,5 +117,5 @@ total_runtime = overall_end_time - overall_start_time
 with open("overallCompileTime_LSTM.txt", "w") as f:
     f.write(f"Total runtime for all companies: {total_runtime:.2f} seconds\n")
 
-print(f" All companies processed.")
-print(f" Total runtime for all companies: {total_runtime:.2f} seconds")
+print(f"All companies processed.")
+print(f"Total runtime for all companies: {total_runtime:.2f} seconds")

@@ -9,7 +9,7 @@ import { environment } from '../environments/environment';
   providedIn: 'root'
 })
 export class DataService {
-  private apiUrl = '${environment.apiUrl}/files'; // Your Node.js backend URL
+  private apiUrl = '${environment.apiUrl}/files';
   private csvPath = 'assets/companyList.csv';
 
   constructor(private http: HttpClient, private papa: Papa) {}

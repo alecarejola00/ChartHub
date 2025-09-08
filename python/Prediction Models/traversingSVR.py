@@ -77,10 +77,10 @@ def process_stock_csv(folder_path):
         plt.savefig(plot_file)
         plt.close()
 
-        print(f"✅ Done: {file_path}")
+        print(f"Done: {file_path}")
 
     except Exception as e:
-        print(f"❌ Error in {file_path}: {e}")
+        print(f"Error in {file_path}: {e}")
 
 # Traverse the root folder for any `stock.csv`
 ROOT_DIR = "COMPANY/" 
